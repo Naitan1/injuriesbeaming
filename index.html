@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pages | Webpage</title>
+  <link rel="icon" href="https://app.injuries.lu/favicon.ico"/>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #0a0a0a;
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .title {
+      font-size: clamp(36px, 8vw, 64px);
+      font-weight: 900;
+      color: #ff4422;
+      text-shadow: 
+        0 0 10px #ff4422, 
+        0 0 20px #ff4422,
+        0 0 40px rgba(255, 68, 34, 0.5);
+      letter-spacing: clamp(1px, 0.3vw, 3px);
+      margin: 0;
+      position: relative;
+      display: inline-block;
+      background: linear-gradient(45deg, #ff4422, #ff6644, #ff4422);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientShift 3s ease-in-out infinite;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .title-container {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+
+    .button-section {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      width: 100%;
+      max-width: 1000px;
+      align-items: center;
+    }
+
+    .main-button-container {
+      width: 100%;
+    }
+
+    .main-button {
+      background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(20,20,20,0.9));
+      color: white;
+      font-size: clamp(18px, 4vw, 28px);
+      font-weight: 900;
+      padding: 25px 40px;
+      width: 100%;
+      border: 2px solid #ff4422;
+      border-radius: 40px;
+      box-shadow: 
+        0 0 30px rgba(255, 68, 34, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        0 0 40px rgba(255, 68, 34, 0.6),
+        0 0 60px rgba(255, 68, 34, 0.4);
+      cursor: pointer;
+      transition: 0.3s ease all;
+      backdrop-filter: blur(10px);
+      min-height: 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .main-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 68, 34, 0.2), transparent);
+      transition: left 0.8s;
+    }
+
+    .main-button:hover::before {
+      left: 100%;
+    }
+
+    .main-button:hover {
+      background: linear-gradient(135deg, #ff4422, #ff6644);
+      color: black;
+      box-shadow:
+        0 0 50px rgba(255, 68, 34, 1),
+        0 0 100px rgba(255, 68, 34, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      transform: translateY(-3px) scale(1.02);
+      border-color: #ff6644;
+    }
+
+    .main-button:active {
+      transform: translateY(-1px) scale(0.98);
+    }
+
+    .button-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+    }
+
+    .button-row {
+      display: flex;
+      justify-content: center;
+      gap: clamp(15px, 4vw, 30px);
+      flex-wrap: nowrap;
+      width: 100%;
+    }
+
+    .button-item {
+      flex: 1;
+      min-width: 0;
+      max-width: none;
+    }
+
+    .glow-button {
+      background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(20,20,20,0.9));
+      color: white;
+      border: 2px solid #ff4422;
+      padding: clamp(15px, 3vw, 25px) clamp(30px, 6vw, 60px);
+      font-size: clamp(14px, 3.5vw, 20px);
+      font-weight: 700;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 0 15px rgba(255, 68, 34, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      width: 100%;
+      box-sizing: border-box;
+      white-space: nowrap;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      min-height: 60px;
+    }
+
+    .glow-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 68, 34, 0.2), transparent);
+      transition: left 0.8s;
+    }
+
+    .glow-button:hover::before {
+      left: 100%;
+    }
+
+    .glow-button:hover {
+      background: linear-gradient(135deg, #ff4422, #ff6644);
+      color: black;
+      box-shadow: 0 0 30px rgba(255, 68, 34, 0.8), 0 0 60px rgba(255, 68, 34, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      transform: translateY(-3px) scale(1.02);
+      border-color: #ff6644;
+    }
+
+    .glow-button:active {
+      transform: translateY(-1px) scale(0.98);
+    }
+
+    @media (min-width: 769px) {
+      .button-column {
+        flex-direction: row;
+        justify-content: center;
+        gap: clamp(15px, 4vw, 30px);
+      }
+
+      .button-column a {
+        flex: 1;
+      }
+
+      .button-row {
+        flex-direction: row;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .content {
+        padding: 15px;
+        gap: 25px;
+        justify-content: flex-start;
+        padding-top: 60px;
+      }
+
+      .title-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .button-section {
+        gap: 20px;
+        width: 100%;
+      }
+
+      .button-column,
+      .button-row {
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+        align-items: center;
+      }
+
+      .button-item {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      /* Make all buttons the same width on mobile by fixing max-width to widest */
+      .main-button-container,
+      .button-column a,
+      .button-row .button-item a {
+        width: 100%;
+        max-width: 400px;
+      }
+
+      .main-button,
+      .glow-button {
+        width: 100%;
+        max-width: 400px;
+      }
+
+      .main-button-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particleCanvas"></canvas>
+
+  <div class="content">
+    <div class="title-container">
+      <h1 class="title">INJURIES</h1>
+    </div>
+
+    <div class="button-section">
+      <div class="main-button-container">
+        <a href="https://app.injuries.lu/u/backup">
+          <button class="main-button">MAIN WEBSITE</button>
+        </a>
+      </div>
+
+      <div class="button-column">
+        <a href="https://app.injuries.lu/tools/refresher"><button class="glow-button">Cookie Refresher</button></a>
+        <a href="./hyperlink.html"><button class="glow-button">Hyper-Link</button></a>
+      </div>
+
+      <div class="button-row">
+        <div class="button-item"><a href="https://justpaste.it/iml4w"><button class="glow-button">Explanation</button></a></div>
+        <div class="button-item"><a href="https://justpaste.it/ka2rw"><button class="glow-button">Tutorials</button></a></div>
+        <div class="button-item"><a href="https://justpaste.it/frkw3"><button class="glow-button">OP Methods</button></a></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    resizeCanvas();
+
+    let particles = [];
+    const numParticles = window.innerWidth < 768 ? 75 : 150;
+
+    function randomRedTone() {
+      const r = 230 + Math.floor(Math.random() * 26);
+      const g = 20 + Math.floor(Math.random() * 41);
+      const b = 10 + Math.floor(Math.random() * 31);
+      return `rgb(${r},${g},${b})`;
+    }
+
+    function initParticles() {
+      particles = [];
+      for (let i = 0; i < numParticles; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          speedX: ((Math.random() - 0.5) * 0.5) * 0.3,
+          speedY: ((Math.random() - 0.5) * 0.5) * 0.3,
+          radius: 0.5 + Math.random() * 1.5,
+          color: randomRedTone(),
+          alpha: 0.3 + Math.random() * 0.4
+        });
+      }
+    }
+
+    initParticles();
+
+    let mouseX = canvas.width / 2;
+    let mouseY = canvas.height / 2;
+    let currentOffsetX = 0;
+    let currentOffsetY = 0;
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    window.addEventListener('touchmove', (e) => {
+      if (e.touches[0]) {
+        mouseX = e.touches[0].clientX;
+        mouseY = e.touches[0].clientY;
+      }
+    });
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const targetOffsetX = (mouseX - canvas.width / 2) * 0.015;
+      const targetOffsetY = (mouseY - canvas.height / 2) * 0.015;
+
+      const easing = 0.04;
+      currentOffsetX += (targetOffsetX - currentOffsetX) * easing;
+      currentOffsetY += (targetOffsetY - currentOffsetY) * easing;
+
+      particles.forEach(p => {
+        p.x += p.speedX;
+        p.y += p.speedY;
+
+        if (p.x <= 0 || p.x >= canvas.width) p.speedX *= -1;
+        if (p.y <= 0 || p.y >= canvas.height) p.speedY *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x + currentOffsetX, p.y + currentOffsetY, p.radius, 0, Math.PI * 2);
+
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = p.color;
+
+        const rgbMatch = p.color.match(/\d+/g);
+        ctx.fillStyle = rgbMatch ? `rgba(${rgbMatch[0]},${rgbMatch[1]},${rgbMatch[2]},${p.alpha})` : p.color;
+
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+
+      requestAnimationFrame(drawParticles);
+    }
+
+    drawParticles();
+
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      initParticles();
+    });
+
+    if (window.innerWidth < 768) {
+      let lastTime = 0;
+      const throttleDelay = 100;
+      window.addEventListener('touchmove', (e) => {
+        const now = Date.now();
+        if (now - lastTime > throttleDelay) {
+          if (e.touches[0]) {
+            mouseX = e.touches[0].clientX;
+            mouseY = e.touches[0].clientY;
+          }
+          lastTime = now;
+        }
+      });
+    }
+  </script>
+</body>
+</html>

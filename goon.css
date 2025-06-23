@@ -1,0 +1,209 @@
+.form-input, .form-select {
+  width: 100%;
+  max-width: 500px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  display: block;
+}
+
+body {
+  background: #0a0a0a;
+  color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  min-height: 100vh;
+  text-align: center;
+}
+
+.container {
+  background: rgba(15, 15, 15, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow:
+    0 0 30px rgba(255, 68, 34, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 0 40px rgba(255, 68, 34, 0.6),
+    0 0 60px rgba(255, 68, 34, 0.4);
+  border: 2px solid #ff4422;
+  max-width: 500px;
+  width: 100%;
+}
+
+.service-title {
+  font-size: 2.5rem;
+  color: #ff4422;
+  margin-bottom: 20px;
+  text-shadow:
+    0 0 10px #ff4422,
+    0 0 20px #ff4422,
+    0 0 40px rgba(255, 68, 34, 0.5);
+}
+
+.tab-container {
+  display: flex;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(10, 10, 10, 0.8);
+}
+
+.tab {
+  flex: 1;
+  padding: 12px 20px;
+  background: rgba(30, 30, 30, 0.8);
+  border: 2px solid #ff4422;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tab.active {
+  background: linear-gradient(135deg, #ff4422, #ff6644);
+  border-color: #ff6644;
+  color: black;
+  box-shadow:
+    0 0 30px rgba(255, 68, 34, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.tab:hover:not(.active) {
+  background: rgba(255, 68, 34, 0.4);
+}
+
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #ff4422;
+  font-weight: 500;
+}
+
+.form-input, .form-select {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid rgba(255, 68, 34, 0.3);
+  border-radius: 8px;
+  background: rgba(20, 20, 20, 0.9);
+  color: white;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-input:focus, .form-select:focus {
+  outline: none;
+  border-color: #ff4422;
+  box-shadow: 0 0 15px rgba(255, 68, 34, 0.6);
+}
+
+.generate-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #ff4422, #ff6644);
+  border: 2px solid #ff4422;
+  border-radius: 12px;
+  padding: 15px;
+  color: black;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow:
+    0 0 30px rgba(255, 68, 34, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.generate-btn:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 50px rgba(255, 68, 34, 1),
+    0 0 100px rgba(255, 68, 34, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border-color: #ff6644;
+}
+
+.result-box {
+  margin-top: 20px;
+  padding: 15px;
+  background: rgba(10, 10, 10, 0.8);
+  border-radius: 12px;
+  border: 2px solid #ff4422;
+  box-shadow: 0 0 30px rgba(255, 68, 34, 0.8);
+  display: none;
+}
+
+.result-box.show {
+  display: block;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.loading {
+  color: #ff4422;
+  font-style: italic;
+}
+.back-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: transparent;
+  border: 2px solid #ff4422;
+  color: #ff4422;
+  font-size: 0.9rem;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow:
+    0 0 8px rgba(255, 68, 34, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.back-button:hover {
+  background: linear-gradient(135deg, #ff4422, #ff6644);
+  color: black;
+  border-color: #ff6644;
+  box-shadow:
+    0 0 15px rgba(255, 68, 34, 1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+@media (max-width: 767px) {
+  .container {
+    max-width: 320px; /* smaller width */
+    padding: 20px; /* reduce padding */
+    font-size: 0.85rem; /* smaller base font size */
+  }
+
+  /* Optional: adjust input, button font size */
+  .form-input,
+  .form-select,
+  .generate-btn,
+  .service-title,
+  .tab {
+    font-size: 0.85rem;
+  }
+
+  .service-title {
+    font-size: 1.8rem; /* scale down the big title */
+  }
+
+  .tab-container {
+    margin-bottom: 15px;
+  }
+
+  .generate-btn {
+    padding: 12px;
+  }
+}

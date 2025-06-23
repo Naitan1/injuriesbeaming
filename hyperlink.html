@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pages | Hyperlink</title>
+  <link rel="icon" href="https://app.injuries.lu/favicon.ico"/>
+  <link rel="stylesheet" href="./goon.css">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #0a0a0a;
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particleCanvas"></canvas>
+
+  <div class="container">
+    <button class="back-button" onclick="window.location.href='https://injuries.services/'">← Back</button>
+    <div id="servicePage" class="service-page active">
+      <h2 class="service-title">HYPERLINK</h2>
+
+      <div class="tab-container">
+        <button class="tab active" onclick="switchTab('shorten')">Shorten URL</button>
+        <button class="tab" onclick="switchTab('unshorten')">Unshorten URL</button>
+      </div>
+
+      <!-- Shorten URL Tab -->
+      <div id="shortenTab">
+        <div class="form-group">
+          <label class="form-label">Select Option</label>
+          <select class="form-select" id="optionSelect">
+            <option value="private-server">Private Server</option>
+            <option value="profile">Profile</option>
+            <option value="group">Group</option>
+            <option value="any">Any Link</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Enter Your Link</label>
+          <input type="url" class="form-input" id="urlInput" placeholder="https://www.robiox.com.tg/users/123/profile">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Custom Slug (Optional)</label>
+          <input type="text" class="form-input" id="customSlug" placeholder="your-custom-slug">
+          <small style="color: #888; font-size: 0.8rem;">Your link will be: https://is.gd/your-custom-slug</small>
+        </div>
+
+        <button class="generate-btn" onclick="generateLink()">Generate Link</button>
+      </div>
+
+      <!-- Unshorten URL Tab -->
+      <div id="unshortenTab" style="display: none;">
+        <div class="form-group">
+          <label class="form-label">Enter Shortened URL</label>
+          <input type="url" class="form-input" id="shortenedUrlInput" placeholder="https://is.gd/abc123">
+        </div>
+
+        <button class="generate-btn" onclick="unshortenLink()">Reveal Original URL</button>
+      </div>
+
+      <div class="result-box" id="resultBox">
+        <div style="margin-bottom: 10px; color: #ff0000;">Result:</div>
+        <div id="resultText" style="word-break: break-all; margin-bottom: 15px;"></div>
+        <button class="generate-btn" onclick="copyResult()" style="margin-top: 0;">Copy to Clipboard</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./sigma.js"></script>
+
+  <!-- Red Glow Particle Background -->
+  <script>
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    resizeCanvas();
+
+    let particles = [];
+    const numParticles = window.innerWidth < 768 ? 75 : 150;
+
+    function randomRedTone() {
+      const r = 230 + Math.floor(Math.random() * 26);
+      const g = 20 + Math.floor(Math.random() * 41);
+      const b = 10 + Math.floor(Math.random() * 31);
+      return `rgb(${r},${g},${b})`;
+    }
+
+    function initParticles() {
+      particles = [];
+      for (let i = 0; i < numParticles; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          speedX: ((Math.random() - 0.5) * 0.5) * 0.3,
+          speedY: ((Math.random() - 0.5) * 0.5) * 0.3,
+          radius: 0.5 + Math.random() * 1.5,
+          color: randomRedTone(),
+          alpha: 0.3 + Math.random() * 0.4
+        });
+      }
+    }
+
+    initParticles();
+
+    let mouseX = canvas.width / 2;
+    let mouseY = canvas.height / 2;
+    let currentOffsetX = 0;
+    let currentOffsetY = 0;
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    window.addEventListener('touchmove', (e) => {
+      if (e.touches[0]) {
+        mouseX = e.touches[0].clientX;
+        mouseY = e.touches[0].clientY;
+      }
+    });
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const targetOffsetX = (mouseX - canvas.width / 2) * 0.015;
+      const targetOffsetY = (mouseY - canvas.height / 2) * 0.015;
+
+      const easing = 0.04;
+      currentOffsetX += (targetOffsetX - currentOffsetX) * easing;
+      currentOffsetY += (targetOffsetY - currentOffsetY) * easing;
+
+      particles.forEach(p => {
+        p.x += p.speedX;
+        p.y += p.speedY;
+
+        if (p.x <= 0 || p.x >= canvas.width) p.speedX *= -1;
+        if (p.y <= 0 || p.y >= canvas.height) p.speedY *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x + currentOffsetX, p.y + currentOffsetY, p.radius, 0, Math.PI * 2);
+
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = p.color;
+
+        const rgbMatch = p.color.match(/\d+/g);
+        ctx.fillStyle = rgbMatch ? `rgba(${rgbMatch[0]},${rgbMatch[1]},${rgbMatch[2]},${p.alpha})` : p.color;
+
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+
+      requestAnimationFrame(drawParticles);
+    }
+
+    drawParticles();
+
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      initParticles();
+    });
+
+    if (window.innerWidth < 768) {
+      let lastTime = 0;
+      const throttleDelay = 100;
+      window.addEventListener('touchmove', (e) => {
+        const now = Date.now();
+        if (now - lastTime > throttleDelay) {
+          if (e.touches[0]) {
+            mouseX = e.touches[0].clientX;
+            mouseY = e.touches[0].clientY;
+          }
+          lastTime = now;
+        }
+      });
+    }
+  </script>
+</body>
+</html>
